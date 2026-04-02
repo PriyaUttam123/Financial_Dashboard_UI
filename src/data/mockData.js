@@ -5,6 +5,7 @@ export const mockTransactions = [
     amount: 5200.00,
     category: 'Salary',
     type: 'Income',
+    isRecurring: true,
     description: 'Monthly salary deposit from TechCorp Inc.',
   },
   {
@@ -69,6 +70,7 @@ export const mockTransactions = [
     amount: 1800.00,
     category: 'Rent',
     type: 'Expense',
+    isRecurring: true,
     description: 'Monthly apartment rent payment',
   },
   {

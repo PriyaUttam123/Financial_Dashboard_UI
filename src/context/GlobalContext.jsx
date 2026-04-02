@@ -8,6 +8,7 @@ export function GlobalProvider({ children }) {
   const [transactions] = useState(mockTransactions);
   const [filters, setFilters] = useState({ search: '', category: 'All' });
   const [activePage, setActivePage] = useState('Dashboard');
+  const [monthlyBudget, setMonthlyBudget] = useState(5000);
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((t) => {
@@ -46,7 +47,9 @@ export function GlobalProvider({ children }) {
     activePage,
     setActivePage,
     stats,
-  }), [userRole, transactions, filteredTransactions, filters, activePage, stats]);
+    monthlyBudget,
+    setMonthlyBudget,
+  }), [userRole, transactions, filteredTransactions, filters, activePage, stats, monthlyBudget]);
 
   return (
     <GlobalContext.Provider value={value}>

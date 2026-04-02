@@ -7,6 +7,7 @@ import {
   Activity,
 } from 'lucide-react';
 import StatCard from '../dashboard/StatCard';
+import BudgetCard from '../dashboard/BudgetCard';
 
 const BalanceTrendChart = React.lazy(() => import('../dashboard/BalanceTrendChart'));
 const SpendingBreakdownChart = React.lazy(() => import('../dashboard/SpendingBreakdownChart'));
@@ -67,32 +68,40 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Stats Grid: 3 columns */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <StatCard
-          icon={Wallet}
-          label="Total Balance"
-          amount={stats.balance}
-          gradient="from-primary-500 to-primary-700"
-          positive={stats.balance >= 0}
-          sub={stats.balance >= 0 ? 'Positive' : 'Negative'}
-        />
-        <StatCard
-          icon={TrendingUp}
-          label="Income"
-          amount={stats.totalIncome}
-          gradient="from-emerald-500 to-emerald-700"
-          positive={true}
-          sub="This period"
-        />
-        <StatCard
-          icon={TrendingDown}
-          label="Expenses"
-          amount={stats.totalExpense}
-          gradient="from-rose-500 to-rose-700"
-          positive={false}
-          sub="This period"
-        />
+      {/* Top Section: Monthly Limit & Key Stats */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Budget Tracking (Span 1) */}
+        <div className="lg:col-span-1">
+          <BudgetCard />
+        </div>
+
+        {/* Totals Grid (Span 2) */}
+        <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <StatCard
+            icon={Wallet}
+            label="Total Balance"
+            amount={stats.balance}
+            gradient="from-primary-500 to-primary-700"
+            positive={stats.balance >= 0}
+            sub={stats.balance >= 0 ? 'Positive' : 'Negative'}
+          />
+          <StatCard
+            icon={TrendingUp}
+            label="Income"
+            amount={stats.totalIncome}
+            gradient="from-emerald-500 to-emerald-700"
+            positive={true}
+            sub="This period"
+          />
+          <StatCard
+            icon={TrendingDown}
+            label="Expenses"
+            amount={stats.totalExpense}
+            gradient="from-rose-500 to-rose-700"
+            positive={false}
+            sub="This period"
+          />
+        </div>
       </div>
 
       {/* Charts Grid: 2 columns */}

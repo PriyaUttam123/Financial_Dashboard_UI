@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, ArrowDownRight, Edit2, Trash2 } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Edit2, Trash2, Repeat } from 'lucide-react';
 
 const categoryColors = {
   'Salary':       'from-primary-500 to-primary-700',
@@ -25,7 +25,14 @@ const TransactionRow = React.memo(function TransactionRow({ t, isAdmin }) {
             {t.category.slice(0, 2).toUpperCase()}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-surface-200 truncate max-w-[200px]">{t.description}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-medium text-surface-200 truncate max-w-[200px]">{t.description}</p>
+              {t.isRecurring && (
+                <div className="tooltip-container" title="Recurring Monthly">
+                  <Repeat className="w-3 h-3 text-primary-400" />
+                </div>
+              )}
+            </div>
             <p className="text-xs text-surface-500 mt-0.5">{t.date}</p>
           </div>
         </div>
