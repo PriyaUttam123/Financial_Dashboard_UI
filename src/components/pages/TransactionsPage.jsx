@@ -150,4 +150,29 @@ export default function TransactionsPage() {
                   <TransactionRow key={t.id} t={t} isAdmin={isAdmin} />
                 ))
               ) : (
-    
+                <tr>
+                  <td colSpan={isAdmin ? 5 : 4} className="py-16 text-center">
+                    <p className="text-surface-500 text-sm">No transactions match your filters.</p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Table Footer */}
+        <div className="px-4 py-3 border-t border-surface-700/40 flex items-center justify-between">
+          <p className="text-xs text-surface-500">
+            Showing <span className="text-surface-300 font-medium">{filteredTransactions.length}</span> of <span className="text-surface-300 font-medium">10</span> transactions
+          </p>
+          {!isAdmin && (
+            <span className="flex items-center gap-1.5 text-xs text-amber-400/80">
+              <Lock className="w-3 h-3" />
+              Admin role required to modify
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
