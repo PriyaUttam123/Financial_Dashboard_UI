@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useGlobalContext } from '../../context/GlobalContext';
+import { useAuth } from '../../context/AuthContext';
 import {
   Search,
   ChevronDown,
@@ -10,7 +11,9 @@ import {
   LayoutDashboard,
   ArrowLeftRight,
   TrendingUp,
+  LogOut,
 } from 'lucide-react';
+import ThemeToggle from '../common/ThemeToggle';
 
 const mobileNavItems = [
   { id: 'Dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -19,6 +22,7 @@ const mobileNavItems = [
 
 export default function TopBar() {
   const { userRole, setUserRole, filters, setFilters, activePage, setActivePage } = useGlobalContext();
+  const { logout, user } = useAuth();
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -44,7 +48,7 @@ export default function TopBar() {
 
   return (
     <>
-      <header className="sticky top-0 z-20 h-16 bg-surface-900/80 backdrop-blur-xl border-b border-surface-700/50">
+      <header className="sticky top-0 z-20 h-16 bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl border-b border-surface-200 dark:border-surface-700/50 transition-colors duration-300">
         <div className="flex items-center justify-between h-full px-4 lg:px-8">
           {/* Mobile Menu Button + Logo */}
           <div className="flex items-center gap-3">
@@ -79,8 +83,10 @@ export default function TopBar() {
             </div>
           </div>
 
-          {/* Right Section: Role Switcher */}
+          {/* Right Section: Theme + Role + Logout */}
           <div className="flex items-center gap-3">
+            <ThemeToggle />
+
             {/* Role Switcher Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
@@ -88,14 +94,14 @@ export default function TopBar() {
                 onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
                 className={`flex items-center gap-2.5 px-4 py-2 rounded-xl border transition-all duration-200
                   ${roleDropdownOpen
-                    ? 'bg-surface-800 border-primary-500/40 shadow-lg shadow-primary-500/10'
-                    : 'bg-surface-800/60 border-surface-700/50 hover:border-surface-600/50'
+                    ? 'bg-surface-100 dark:bg-surface-800 border-primary-500/40 shadow-lg shadow-primary-500/10'
+                    : 'bg-surface-50/50 dark:bg-surface-800/60 border-surface-200 dark:border-surface-700/50 hover:border-surface-300 dark:hover:border-surface-600/50'
                   }`}
               >
                 <div className={`w-7 h-7 rounded-lg ${currentRole.bg} flex items-center justify-center`}>
                   <CurrentRoleIcon className={`w-3.5 h-3.5 ${currentRole.color}`} />
                 </div>
-                <span className="hidden sm:block text-sm font-medium text-surface-200">{userRole}</span>
+                <span className="hidden sm:block text-sm font-medium text-surface-700 dark:text-surface-200">{userRole}</span>
                 <ChevronDown
                   className={`w-4 h-4 text-surface-400 transition-transform duration-200 ${
                     roleDropdownOpen ? 'rotate-180' : ''
@@ -105,8 +111,8 @@ export default function TopBar() {
 
               {/* Dropdown Menu */}
               {roleDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-surface-800/95 backdrop-blur-xl border border-surface-700/50 rounded-xl shadow-glass-lg overflow-hidden animate-slide-up">
-                  <div className="px-3 py-2 border-b border-surface-700/50">
+                <div className="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-surface-800/95 backdrop-blur-xl border border-surface-200 dark:border-surface-700/50 rounded-xl shadow-glass-lg overflow-hidden animate-slide-up z-30">
+                  <div className="px-3 py-2 border-b border-surface-100 dark:border-surface-700/50">
                     <p className="text-xs font-semibold text-surface-500 uppercase tracking-wider">Switch Role</p>
                   </div>
                   {roles.map((role) => {
@@ -122,8 +128,8 @@ export default function TopBar() {
                         }}
                         className={`w-full flex items-center gap-3 px-3 py-2.5 transition-all duration-150
                           ${isActive
-                            ? 'bg-primary-600/15 text-primary-300'
-                            : 'text-surface-300 hover:bg-surface-700/50'
+                            ? 'bg-primary-600/10 text-primary-600 dark:text-primary-300'
+                            : 'text-surface-600 dark:text-surface-300 hover:bg-surface-50 dark:hover:bg-surface-700/50'
                           }`}
                       >
                         <div className={`w-8 h-8 rounded-lg ${role.bg} flex items-center justify-center`}>
@@ -141,6 +147,17 @@ export default function TopBar() {
                       </button>
                     );
                   })}
+                  <div className="border-t border-surface-100 dark:border-surface-700/50">
+                    <button
+                      onClick={logout}
+                      className="w-full flex items-center gap-3 px-3 py-3 text-rose-500 hover:bg-rose-500/5 dark:hover:bg-rose-500/10 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-rose-500/10 flex items-center justify-center">
+                        <LogOut className="w-4 h-4" />
+                      </div>
+                      <span className="text-sm font-medium">Log out</span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

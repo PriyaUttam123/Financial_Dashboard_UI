@@ -18,17 +18,17 @@ const BudgetCard = React.memo(function BudgetCard() {
   };
 
   return (
-    <div className="glass-card p-6 flex flex-col h-full animate-slide-up">
+    <div className="glass-card p-6 flex flex-col h-full">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
-            isOverBudget ? 'bg-rose-500/20 text-rose-400' : 'bg-primary-500/20 text-primary-400'
+            isOverBudget ? 'bg-rose-500/20 text-rose-500 dark:text-rose-400' : 'bg-primary-500/20 text-primary-600 dark:text-primary-400'
           }`}>
             <Target className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-surface-200">Monthly Budget</h3>
-            <p className="text-xs text-surface-500">Target spending</p>
+            <h3 className="text-sm font-semibold text-surface-800 dark:text-surface-200">Monthly Budget</h3>
+            <p className="text-xs text-surface-500 dark:text-surface-500">Target spending</p>
           </div>
         </div>
         
@@ -50,7 +50,7 @@ const BudgetCard = React.memo(function BudgetCard() {
         ) : (
           <button 
             onClick={() => setIsEditing(true)}
-            className="p-1.5 bg-surface-800 text-surface-400 rounded-lg hover:text-primary-400 transition-colors"
+            className="p-1.5 bg-surface-100 dark:bg-surface-800 text-surface-500 dark:text-surface-400 rounded-lg hover:text-primary-500 transition-colors"
           >
             <Edit3 className="w-4 h-4" />
           </button>
@@ -62,22 +62,22 @@ const BudgetCard = React.memo(function BudgetCard() {
           <div>
             {isEditing ? (
               <div className="relative mt-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400 text-sm">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-500 dark:text-surface-400 text-sm">$</span>
                 <input
                   type="number"
                   value={tempBudget}
                   onChange={(e) => setTempBudget(e.target.value)}
-                  className="bg-surface-900 border border-surface-700 rounded-lg pl-6 pr-3 py-1 w-28 text-lg font-bold text-surface-100 focus:outline-none focus:border-primary-500"
+                  className="bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-lg pl-6 pr-3 py-1 w-28 text-lg font-bold text-surface-900 dark:text-surface-100 focus:outline-none focus:border-primary-500"
                   autoFocus
                 />
               </div>
             ) : (
-              <p className="text-2xl font-bold text-surface-100">${monthlyBudget.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-surface-900 dark:text-surface-100">${monthlyBudget.toLocaleString()}</p>
             )}
             <p className="text-xs text-surface-500 mt-1">Total limit</p>
           </div>
           <div className="text-right">
-            <p className={`text-lg font-bold ${isOverBudget ? 'text-rose-400' : 'text-surface-200'}`}>
+            <p className={`text-lg font-bold ${isOverBudget ? 'text-rose-500 dark:text-rose-400' : 'text-surface-800 dark:text-surface-200'}`}>
               ${spent.toLocaleString()}
             </p>
             <p className="text-xs text-surface-500 mt-1">Spent so far</p>
@@ -85,7 +85,7 @@ const BudgetCard = React.memo(function BudgetCard() {
         </div>
 
         {/* Progress Bar */}
-        <div className="relative w-full h-3 bg-surface-800 rounded-full overflow-hidden">
+        <div className="relative w-full h-3 bg-surface-100 dark:bg-surface-800 rounded-full overflow-hidden shadow-inner">
           <div 
             className={`h-full transition-all duration-700 ease-out rounded-full ${
               isOverBudget ? 'bg-rose-500' : isNearLimit ? 'bg-amber-500' : 'bg-primary-500'

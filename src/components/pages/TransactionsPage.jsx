@@ -1,15 +1,41 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { useGlobalContext } from '../../context/GlobalContext';
 import { categories } from '../../data/mockData';
-import { Search, Filter, Lock, Plus, Download, FileText, Table, ChevronDown } from 'lucide-react';
+import { Filter, Lock, Plus, Download, FileText, Table, ChevronDown } from 'lucide-react';
 import TransactionList from '../transactions/TransactionList';
 import { exportToCSV, exportToPDF } from '../../utils/exportUtils';
+import Skeleton, { TableSkeleton } from '../common/Skeleton';
+import { motion } from 'framer-motion';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 100 }
+  }
+};
 
 export default function TransactionsPage() {
   const { filteredTransactions, filters, setFilters, userRole } = useGlobalContext();
   const isAdmin = userRole === 'Admin';
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate initial loading
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -40,12 +66,33 @@ export default function TransactionsPage() {
     setExportDropdownOpen(false);
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Skeleton className="w-32 h-8" />
+          <div className="flex gap-3">
+            <Skeleton className="w-24 h-10 rounded-xl" />
+            <Skeleton className="w-32 h-10 rounded-xl" />
+          </div>
+        </div>
+        <Skeleton className="w-full h-16 rounded-2xl" />
+        <TableSkeleton />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6 animate-fade-in">
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-6"
+    >
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-surface-100">Transactions</h1>
+          <h1 className="text-2xl font-bold text-surface-900 dark:text-surface-100">Transactions</h1>
           <p className="text-sm text-surface-500 mt-1">
             {filteredTransactions.length} records found
             {!isAdmin && <span className="ml-2 inline-flex items-center gap-1 text-amber-400"><Lock className="w-3 h-3" /> View-only mode</span>}
@@ -57,27 +104,27 @@ export default function TransactionsPage() {
           <div className="relative" ref={dropdownRef}>
             <button 
               onClick={() => setExportDropdownOpen(!exportDropdownOpen)}
-              className="flex items-center gap-2 px-4 py-2 bg-surface-800 border border-surface-700 hover:border-surface-600 text-surface-200 rounded-xl text-sm font-medium transition-all"
+              className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 hover:border-surface-300 dark:hover:border-surface-600 text-surface-700 dark:text-surface-200 rounded-xl text-sm font-medium transition-all"
             >
-              <Download className="w-4 h-4 text-primary-400" />
+              <Download className="w-4 h-4 text-primary-500" />
               <span>Export</span>
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${exportDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {exportDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-surface-800/95 backdrop-blur-xl border border-surface-700/50 rounded-xl shadow-glass-lg overflow-hidden z-10 animate-slide-up">
+              <div className="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-surface-800/95 backdrop-blur-xl border border-surface-200 dark:border-surface-700/50 rounded-xl shadow-lg dark:shadow-glass-lg overflow-hidden z-10">
                 <button 
                   onClick={handleExportCSV}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-surface-300 hover:bg-surface-700/50 hover:text-surface-100 transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-surface-600 dark:text-surface-300 hover:bg-surface-50 dark:hover:bg-surface-700/50 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
                 >
-                  <Table className="w-4 h-4 text-emerald-400" />
+                  <Table className="w-4 h-4 text-emerald-500" />
                   <span>Download CSV</span>
                 </button>
                 <button 
                   onClick={handleExportPDF}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-surface-300 hover:bg-surface-700/50 hover:text-surface-100 transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-surface-600 dark:text-surface-300 hover:bg-surface-50 dark:hover:bg-surface-700/50 hover:text-surface-900 dark:hover:text-surface-100 transition-colors"
                 >
-                  <FileText className="w-4 h-4 text-rose-400" />
+                  <FileText className="w-4 h-4 text-rose-500" />
                   <span>Download PDF</span>
                 </button>
               </div>
@@ -91,10 +138,10 @@ export default function TransactionsPage() {
             </button>
           )}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Filters (Search removed as it exists in TopBar) */}
-      <div className="glass-card p-4">
+      {/* Filters */}
+      <motion.div variants={itemVariants} className="glass-card p-4">
         <div className="flex flex-col sm:flex-row items-center gap-3">
           {/* Category Filter */}
           <div className="relative w-full sm:w-auto">
@@ -106,7 +153,7 @@ export default function TransactionsPage() {
               className="input-field pl-10 pr-8 text-sm appearance-none cursor-pointer w-full sm:min-w-[200px]"
             >
               {categories.map((cat) => (
-                <option key={cat} value={cat} className="bg-surface-800">{cat}</option>
+                <option key={cat} value={cat} className="bg-white dark:bg-surface-800">{cat}</option>
               ))}
             </select>
           </div>
@@ -116,29 +163,34 @@ export default function TransactionsPage() {
             <button
               id="clear-filters"
               onClick={handleClearFilters}
-              className="px-4 py-2.5 w-full sm:w-auto rounded-xl text-sm text-surface-400 border border-surface-700/50 hover:bg-surface-800/80 hover:text-surface-200 transition-colors"
+              className="px-4 py-2.5 w-full sm:w-auto rounded-xl text-sm text-surface-400 border border-surface-200 dark:border-surface-700/50 hover:bg-surface-50 dark:hover:bg-surface-800/80 hover:text-surface-600 dark:hover:text-surface-200 transition-colors"
             >
               Clear Filters
             </button>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Table */}
-      <TransactionList transactions={filteredTransactions} isAdmin={isAdmin} />
+      <motion.div variants={itemVariants}>
+        <TransactionList transactions={filteredTransactions} isAdmin={isAdmin} />
+      </motion.div>
 
-      {/* Table Footer (Integrated into Page or could be moved to List) */}
-      <div className="px-4 py-3 border-t border-surface-700/40 flex items-center justify-between glass-card -mt-6 rounded-t-none">
+      {/* Table Footer */}
+      <motion.div 
+        variants={itemVariants}
+        className="px-4 py-3 border-t border-surface-200 dark:border-surface-700/40 flex items-center justify-between glass-card -mt-6 rounded-t-none"
+      >
         <p className="text-xs text-surface-500">
-          Showing <span className="text-surface-300 font-medium">{filteredTransactions.length}</span> of <span className="text-surface-300 font-medium">10</span> transactions
+          Showing <span className="text-surface-900 dark:text-surface-300 font-medium">{filteredTransactions.length}</span> of <span className="text-surface-900 dark:text-surface-300 font-medium">10</span> transactions
         </p>
         {!isAdmin && (
-          <span className="flex items-center gap-1.5 text-xs text-amber-400/80">
+          <span className="flex items-center gap-1.5 text-xs text-amber-500 dark:text-amber-400/80">
             <Lock className="w-3 h-3" />
             Admin role required to modify
           </span>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

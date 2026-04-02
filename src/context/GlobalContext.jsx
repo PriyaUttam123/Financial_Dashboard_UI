@@ -9,6 +9,18 @@ export function GlobalProvider({ children }) {
   const [filters, setFilters] = useState({ search: '', category: 'All' });
   const [activePage, setActivePage] = useState('Dashboard');
   const [monthlyBudget, setMonthlyBudget] = useState(5000);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  // Apply theme to document
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((t) => {
@@ -49,7 +61,9 @@ export function GlobalProvider({ children }) {
     stats,
     monthlyBudget,
     setMonthlyBudget,
-  }), [userRole, transactions, filteredTransactions, filters, activePage, stats, monthlyBudget]);
+    isDarkMode,
+    toggleDarkMode,
+  }), [userRole, transactions, filteredTransactions, filters, activePage, stats, monthlyBudget, isDarkMode]);
 
   return (
     <GlobalContext.Provider value={value}>
