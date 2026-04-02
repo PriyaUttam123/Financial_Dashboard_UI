@@ -24,17 +24,17 @@ export function GlobalProvider({ children }) {
   }, [transactions, filters]);
 
   const stats = useMemo(() => {
-    const totalIncome = transactions
+    const totalIncome = filteredTransactions
       .filter((t) => t.type === 'Income')
       .reduce((sum, t) => sum + t.amount, 0);
-    const totalExpense = transactions
+    const totalExpense = filteredTransactions
       .filter((t) => t.type === 'Expense')
       .reduce((sum, t) => sum + t.amount, 0);
     const balance = totalIncome - totalExpense;
-    const transactionCount = transactions.length;
+    const transactionCount = filteredTransactions.length;
 
     return { totalIncome, totalExpense, balance, transactionCount };
-  }, [transactions]);
+  }, [filteredTransactions]);
 
   const value = {
     userRole,
