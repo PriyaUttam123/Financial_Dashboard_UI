@@ -1,69 +1,24 @@
+import React, { useCallback } from 'react';
 import { useGlobalContext } from '../../context/GlobalContext';
 import { categories } from '../../data/mockData';
-import { Search, Filter, ArrowUpRight, ArrowDownRight, Lock, Plus, Edit2, Trash2 } from 'lucide-react';
-
-const categoryColors = {
-  'Salary':       'from-primary-500 to-primary-700',
-  'Freelance':    'from-sky-500 to-sky-700',
-  'Investment':   'from-emerald-500 to-emerald-700',
-  'Food & Dining':'from-amber-500 to-amber-700',
-  'Utilities':    'from-orange-500 to-orange-700',
-  'Transport':    'from-purple-500 to-purple-700',
-  'Shopping':     'from-pink-500 to-pink-700',
-  'Entertainment':'from-rose-500 to-rose-700',
-  'Rent':         'from-red-500 to-red-700',
-};
-
-function TransactionRow({ t, isAdmin }) {
-  const isIncome = t.type === 'Income';
-  const gradient = categoryColors[t.category] || 'from-surface-500 to-surface-700';
-
-  return (
-    <tr className="border-b border-surface-700/40 hover:bg-surface-800/40 transition-colors duration-150 group">
-      <td className="py-4 px-4">
-        <div className="flex items-center gap-3">
-          <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
-            {t.category.slice(0, 2).toUpperCase()}
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-surface-200 truncate max-w-[200px]">{t.description}</p>
-            <p className="text-xs text-surface-500 mt-0.5">{t.date}</p>
-          </div>
-        </div>
-      </td>
-      <td className="py-4 px-4">
-        <span className="text-sm text-surface-300">{t.category}</span>
-      </td>
-      <td className="py-4 px-4">
-        <span className={`badge ${isIncome ? 'badge-income' : 'badge-expense'}`}>
-          {isIncome ? <ArrowUpRight className="w-3 h-3 mr-1" /> : <ArrowDownRight className="w-3 h-3 mr-1" />}
-          {t.type}
-        </span>
-      </td>
-      <td className="py-4 px-4 text-right">
-        <span className={`text-sm font-bold ${isIncome ? 'text-emerald-400' : 'text-rose-400'}`}>
-          {isIncome ? '+' : '-'}${t.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-        </span>
-      </td>
-      {isAdmin && (
-        <td className="py-4 px-4 text-right">
-          <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button className="p-1.5 text-surface-400 hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors cursor-pointer" title="Edit row">
-              <Edit2 className="w-4 h-4" />
-            </button>
-            <button className="p-1.5 text-surface-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer" title="Delete row">
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
-        </td>
-      )}
-    </tr>
-  );
-}
+import { Search, Filter, Lock, Plus } from 'lucide-react';
+import TransactionList from '../transactions/TransactionList';
 
 export default function TransactionsPage() {
   const { filteredTransactions, filters, setFilters, userRole } = useGlobalContext();
   const isAdmin = userRole === 'Admin';
+
+  const handleSearchChange = useCallback((e) => {
+    setFilters((prev) => ({ ...prev, search: e.target.value }));
+  }, [setFilters]);
+
+  const handleCategoryChange = useCallback((e) => {
+    setFilters((prev) => ({ ...prev, category: e.target.value }));
+  }, [setFilters]);
+
+  const handleClearFilters = useCallback(() => {
+    setFilters({ search: '', category: 'All' });
+  }, [setFilters]);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -96,7 +51,7 @@ export default function TransactionsPage() {
               type="text"
               placeholder="Search transactions..."
               value={filters.search}
-              onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+              onChange={handleSearchChange}
               className="input-field w-full pl-10 text-sm"
             />
           </div>
@@ -107,7 +62,7 @@ export default function TransactionsPage() {
             <select
               id="category-filter"
               value={filters.category}
-              onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+              onChange={handleCategoryChange}
               className="input-field pl-10 pr-8 text-sm appearance-none cursor-pointer min-w-[160px]"
             >
               {categories.map((cat) => (
@@ -120,7 +75,7 @@ export default function TransactionsPage() {
           {(filters.search || filters.category !== 'All') && (
             <button
               id="clear-filters"
-              onClick={() => setFilters({ search: '', category: 'All' })}
+              onClick={handleClearFilters}
               className="px-4 py-2.5 rounded-xl text-sm text-surface-400 border border-surface-700/50 hover:bg-surface-800/80 hover:text-surface-200 transition-colors"
             >
               Clear
@@ -130,48 +85,19 @@ export default function TransactionsPage() {
       </div>
 
       {/* Table */}
-      <div className="glass-card overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-surface-700/50">
-                <th className="text-left py-3.5 px-4 text-xs font-semibold text-surface-500 uppercase tracking-wider">Transaction</th>
-                <th className="text-left py-3.5 px-4 text-xs font-semibold text-surface-500 uppercase tracking-wider">Category</th>
-                <th className="text-left py-3.5 px-4 text-xs font-semibold text-surface-500 uppercase tracking-wider">Type</th>
-                <th className="text-right py-3.5 px-4 text-xs font-semibold text-surface-500 uppercase tracking-wider">Amount</th>
-                {isAdmin && (
-                  <th className="text-right py-3.5 px-4 text-xs font-semibold text-surface-500 uppercase tracking-wider">Actions</th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTransactions.length > 0 ? (
-                filteredTransactions.map((t) => (
-                  <TransactionRow key={t.id} t={t} isAdmin={isAdmin} />
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={isAdmin ? 5 : 4} className="py-16 text-center">
-                    <p className="text-surface-500 text-sm">No transactions match your filters.</p>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+      <TransactionList transactions={filteredTransactions} isAdmin={isAdmin} />
 
-        {/* Table Footer */}
-        <div className="px-4 py-3 border-t border-surface-700/40 flex items-center justify-between">
-          <p className="text-xs text-surface-500">
-            Showing <span className="text-surface-300 font-medium">{filteredTransactions.length}</span> of <span className="text-surface-300 font-medium">10</span> transactions
-          </p>
-          {!isAdmin && (
-            <span className="flex items-center gap-1.5 text-xs text-amber-400/80">
-              <Lock className="w-3 h-3" />
-              Admin role required to modify
-            </span>
-          )}
-        </div>
+      {/* Table Footer (Integrated into Page or could be moved to List) */}
+      <div className="px-4 py-3 border-t border-surface-700/40 flex items-center justify-between glass-card -mt-6 rounded-t-none">
+        <p className="text-xs text-surface-500">
+          Showing <span className="text-surface-300 font-medium">{filteredTransactions.length}</span> of <span className="text-surface-300 font-medium">10</span> transactions
+        </p>
+        {!isAdmin && (
+          <span className="flex items-center gap-1.5 text-xs text-amber-400/80">
+            <Lock className="w-3 h-3" />
+            Admin role required to modify
+          </span>
+        )}
       </div>
     </div>
   );

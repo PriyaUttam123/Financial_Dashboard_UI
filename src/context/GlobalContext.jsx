@@ -36,7 +36,7 @@ export function GlobalProvider({ children }) {
     return { totalIncome, totalExpense, balance, transactionCount };
   }, [filteredTransactions]);
 
-  const value = {
+  const value = useMemo(() => ({
     userRole,
     setUserRole,
     transactions,
@@ -46,7 +46,7 @@ export function GlobalProvider({ children }) {
     activePage,
     setActivePage,
     stats,
-  };
+  }), [userRole, transactions, filteredTransactions, filters, activePage, stats]);
 
   return (
     <GlobalContext.Provider value={value}>
