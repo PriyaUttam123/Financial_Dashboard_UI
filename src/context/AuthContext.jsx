@@ -8,9 +8,14 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     // Check if user is logged in on mount
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    try {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+    } catch (error) {
+      console.error('Failed to load user from localStorage', error);
+      localStorage.removeItem('user');
     }
     setLoading(false);
   }, []);

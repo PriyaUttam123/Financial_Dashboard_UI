@@ -7,7 +7,7 @@ const TransactionList = React.memo(function TransactionList({ transactions, isAd
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-surface-700/50">
+            <tr className="border-b border-surface-100 dark:border-surface-700/50">
               <th className="text-left py-3.5 px-4 text-xs font-semibold text-surface-500 uppercase tracking-wider">Transaction</th>
               <th className="text-left py-3.5 px-4 text-xs font-semibold text-surface-500 uppercase tracking-wider">Category</th>
               <th className="text-left py-3.5 px-4 text-xs font-semibold text-surface-500 uppercase tracking-wider">Type</th>

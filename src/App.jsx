@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import DashboardLayout from './components/layout/DashboardLayout';
 import DashboardPage from './components/pages/DashboardPage';
 import TransactionsPage from './components/pages/TransactionsPage';
+import InsightsPage from './components/pages/InsightsPage';
 import LoginPage from './components/pages/LoginPage';
 import SignupPage from './components/pages/SignupPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -32,6 +33,7 @@ function AppRoutes() {
       <DashboardLayout>
         {activePage === 'Dashboard' && <DashboardPage />}
         {activePage === 'Transactions' && <TransactionsPage />}
+        {activePage === 'Insights' && <InsightsPage />}
       </DashboardLayout>
     </ProtectedRoute>
   );

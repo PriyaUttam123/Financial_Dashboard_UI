@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useMemo } from 'react';
+import { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { mockTransactions } from '../data/mockData';
 
 const GlobalContext = createContext(null);
@@ -10,6 +10,7 @@ export function GlobalProvider({ children }) {
   const [activePage, setActivePage] = useState('Dashboard');
   const [monthlyBudget, setMonthlyBudget] = useState(5000);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Apply theme to document
   useEffect(() => {
@@ -63,7 +64,9 @@ export function GlobalProvider({ children }) {
     setMonthlyBudget,
     isDarkMode,
     toggleDarkMode,
-  }), [userRole, transactions, filteredTransactions, filters, activePage, stats, monthlyBudget, isDarkMode]);
+    sidebarCollapsed,
+    setSidebarCollapsed,
+  }), [userRole, transactions, filteredTransactions, filters, activePage, stats, monthlyBudget, isDarkMode, sidebarCollapsed]);
 
   return (
     <GlobalContext.Provider value={value}>

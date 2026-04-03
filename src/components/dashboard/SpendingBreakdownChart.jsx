@@ -24,48 +24,52 @@ const tooltipStyle = {
 };
 
 const SpendingBreakdownChart = React.memo(function SpendingBreakdownChart({ pieData }) {
-  return (
-    <div className="glass-card p-6 min-h-[400px] flex flex-col">
-      <h2 className="text-base font-semibold text-surface-200 mb-5">Spending Breakdown</h2>
-      <div className="flex-1 w-full min-h-[300px]">
-        {pieData.length > 0 ? (
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <RechartsTooltip 
-                contentStyle={tooltipStyle}
-                itemStyle={{ color: '#e2e8f0' }}
-                formatter={(value) => [`$${value}`, 'Amount']}
-              />
-              <Legend 
-                iconType="circle" 
-                wrapperStyle={{ paddingTop: '20px' }}
-              />
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                innerRadius={80}
-                outerRadius={110}
-                paddingAngle={5}
-                dataKey="value"
-                stroke="none"
-              >
-                {pieData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={categoryHexColors[entry.name] || '#94a3b8'} 
-                    className="transition-all duration-300 hover:opacity-80 cursor-pointer"
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        ) : (
-          <div className="flex h-full items-center justify-center text-surface-500 text-sm">
-            No spending data available.
-          </div>
-        )}
+  if (!pieData || pieData.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center text-surface-500 text-sm">
+        No spending data available.
       </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-full min-h-[300px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <RechartsTooltip 
+            contentStyle={tooltipStyle}
+            itemStyle={{ color: '#e2e8f0' }}
+            formatter={(value) => [`$${value}`, 'Amount']}
+          />
+          <Legend 
+            iconType="circle" 
+            layout="horizontal" 
+            verticalAlign="bottom" 
+            align="center"
+            wrapperStyle={{ paddingTop: '20px' }}
+          />
+          <Pie
+            data={pieData}
+            cx="50%"
+            cy="50%"
+            innerRadius={80}
+            outerRadius={110}
+            paddingAngle={5}
+            dataKey="value"
+            stroke="none"
+            animationDuration={1500}
+            animationBegin={300}
+          >
+            {pieData.map((entry, index) => (
+              <Cell 
+                key={`cell-${index}`} 
+                fill={categoryHexColors[entry.name] || '#94a3b8'} 
+                className="transition-all duration-300 hover:opacity-80 cursor-pointer"
+              />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
     </div>
   );
 });

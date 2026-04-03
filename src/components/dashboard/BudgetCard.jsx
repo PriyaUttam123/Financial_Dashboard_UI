@@ -18,7 +18,7 @@ const BudgetCard = React.memo(function BudgetCard() {
   };
 
   return (
-    <div className="glass-card p-6 flex flex-col h-full">
+    <div className="glass-card-hover p-6 flex flex-col h-full">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
