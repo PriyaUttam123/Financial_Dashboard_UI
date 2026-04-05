@@ -33,7 +33,7 @@ export default function Sidebar() {
           </div>
           {!sidebarCollapsed && (
             <span className="text-lg font-bold gradient-text whitespace-nowrap">
-              FinDash
+              Financial Dashboard
             </span>
           )}
         </div>

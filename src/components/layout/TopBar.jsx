@@ -64,7 +64,7 @@ export default function TopBar() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/20">
                 <TrendingUp className="w-4 h-4 text-white" />
               </div>
-              <span className="text-base font-bold gradient-text">FinDash</span>
+              <span className="text-base font-bold gradient-text">Financial Dashboard</span>
             </div>
           </div>
 
@@ -175,7 +175,7 @@ export default function TopBar() {
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/20">
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-bold gradient-text">FinDash</span>
+              <span className="text-lg font-bold gradient-text">Financial Dashboard</span>
             </div>
 
             {/* Mobile Search */}

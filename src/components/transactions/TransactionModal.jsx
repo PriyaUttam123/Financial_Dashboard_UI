@@ -189,7 +189,7 @@ const TransactionModal = ({
                 Type
               </label>
               <div className="flex gap-2">
-                <button
+                <motion.button
                   type="button"
                   onClick={() => handleInputChange('type', 'Income')}
                   className={`flex-1 py-2 px-3 rounded-lg border transition-all ${
@@ -197,11 +197,13 @@ const TransactionModal = ({
                       ? 'bg-emerald-500 text-white border-emerald-500'
                       : 'bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border-surface-300 dark:border-surface-600 hover:bg-surface-50 dark:hover:bg-surface-800'
                   }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   disabled={isLoading}
                 >
                   Income
-                </button>
-                <button
+                </motion.button>
+                <motion.button
                   type="button"
                   onClick={() => handleInputChange('type', 'Expense')}
                   className={`flex-1 py-2 px-3 rounded-lg border transition-all ${
@@ -209,10 +211,12 @@ const TransactionModal = ({
                       ? 'bg-rose-500 text-white border-rose-500'
                       : 'bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 border-surface-300 dark:border-surface-600 hover:bg-surface-50 dark:hover:bg-surface-800'
                   }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   disabled={isLoading}
                 >
                   Expense
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>
@@ -262,28 +266,36 @@ const TransactionModal = ({
 
           {/* Actions */}
           <div className="flex gap-3 pt-4">
-            <button
+            <motion.button
               type="button"
               onClick={onClose}
               className="flex-1 px-4 py-2 border border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-900 text-surface-700 dark:text-surface-300 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               disabled={isLoading}
             >
               Cancel
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               type="submit"
               className="flex-1 px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-lg font-medium transition-all shadow-lg shadow-primary-500/25 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              whileHover={{ scale: 1.02, y: -1 }}
+              whileTap={{ scale: 0.98 }}
               disabled={isLoading}
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <motion.div 
+                    className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  />
                   {transaction ? 'Updating...' : 'Adding...'}
                 </span>
               ) : (
                 transaction ? 'Update Transaction' : 'Add Transaction'
               )}
-            </button>
+            </motion.button>
           </div>
         </form>
       </div>

@@ -62,8 +62,9 @@ const BalanceTrendChart = React.memo(function BalanceTrendChart({ balanceData })
             fillOpacity={1} 
             fill="url(#colorBalance)" 
             activeDot={{ r: 5, fill: '#818cf8', stroke: '#1e293b', strokeWidth: 2 }}
-            animationDuration={1500}
+            animationDuration={2000}
             animationBegin={300}
+            animationEasing="ease-out"
           />
         </AreaChart>
       </ResponsiveContainer>

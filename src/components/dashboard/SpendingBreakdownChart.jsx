@@ -65,8 +65,9 @@ const SpendingBreakdownChart = React.memo(function SpendingBreakdownChart({ pieD
             paddingAngle={5}
             dataKey="value"
             stroke="none"
-            animationDuration={1500}
-            animationBegin={300}
+            animationDuration={1800}
+            animationBegin={400}
+            animationEasing="ease-out"
           >
             {pieData.map((entry, index) => (
               <Cell

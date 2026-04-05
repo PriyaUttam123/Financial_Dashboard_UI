@@ -8,6 +8,19 @@ import InsightsPage from './components/pages/InsightsPage';
 import LoginPage from './components/pages/LoginPage';
 import SignupPage from './components/pages/SignupPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import { AnimatePresence, motion } from 'framer-motion';
+
+const pageVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 }
+};
+
+const pageTransition = {
+  type: "tween",
+  ease: "anticipate",
+  duration: 0.3
+};
 
 function AppRoutes() {
   const { activePage } = useGlobalContext();
@@ -31,9 +44,21 @@ function AppRoutes() {
   return (
     <ProtectedRoute>
       <DashboardLayout>
-        {activePage === 'Dashboard' && <DashboardPage />}
-        {activePage === 'Transactions' && <TransactionsPage />}
-        {activePage === 'Insights' && <InsightsPage />}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activePage}
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageTransition}
+            className="w-full h-full"
+          >
+            {activePage === 'Dashboard' && <DashboardPage />}
+            {activePage === 'Transactions' && <TransactionsPage />}
+            {activePage === 'Insights' && <InsightsPage />}
+          </motion.div>
+        </AnimatePresence>
       </DashboardLayout>
     </ProtectedRoute>
   );
