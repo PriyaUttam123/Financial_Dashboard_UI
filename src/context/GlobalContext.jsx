@@ -5,7 +5,7 @@ const GlobalContext = createContext(null);
 
 export function GlobalProvider({ children }) {
   const [userRole, setUserRole] = useState('Admin');
-  const [transactions] = useState(mockTransactions);
+  const [transactions, setTransactions] = useState(mockTransactions);
   const [filters, setFilters] = useState({ search: '', category: 'All' });
   const [activePage, setActivePage] = useState('Dashboard');
   const [monthlyBudget, setMonthlyBudget] = useState(5000);
@@ -22,6 +22,21 @@ export function GlobalProvider({ children }) {
   }, [isDarkMode]);
 
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
+
+  // Transaction CRUD operations
+  const addTransaction = (newTransaction) => {
+    setTransactions(prev => [...prev, newTransaction]);
+  };
+
+  const updateTransaction = (transactionId, updatedTransaction) => {
+    setTransactions(prev => 
+      prev.map(t => t.id === transactionId ? { ...updatedTransaction, id: transactionId } : t)
+    );
+  };
+
+  const deleteTransaction = (transactionId) => {
+    setTransactions(prev => prev.filter(t => t.id !== transactionId));
+  };
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((t) => {
@@ -54,6 +69,7 @@ export function GlobalProvider({ children }) {
     userRole,
     setUserRole,
     transactions,
+    setTransactions,
     filteredTransactions,
     filters,
     setFilters,
@@ -66,6 +82,9 @@ export function GlobalProvider({ children }) {
     toggleDarkMode,
     sidebarCollapsed,
     setSidebarCollapsed,
+    addTransaction,
+    updateTransaction,
+    deleteTransaction,
   }), [userRole, transactions, filteredTransactions, filters, activePage, stats, monthlyBudget, isDarkMode, sidebarCollapsed]);
 
   return (

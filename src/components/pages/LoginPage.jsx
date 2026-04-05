@@ -30,7 +30,7 @@ export default function LoginPage({ onToggleAuthMode }) {
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/20 mb-4">
             <TrendingUp className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold gradient-text">FinDash</h1>
+          <h1 className="text-3xl font-bold gradient-text">Financial Dashboard</h1>
           <p className="text-surface-400 mt-2">Sign in to manage your finances</p>
         </div>
 

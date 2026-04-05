@@ -21,9 +21,9 @@ const BalanceTrendChart = React.memo(function BalanceTrendChart({ balanceData })
   }
 
   return (
-    <div className="w-full h-full min-h-[300px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={balanceData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+    <div className="w-full h-full min-h-[300px] overflow-hidden">
+      <ResponsiveContainer width="100%" height="100%" margin={{ top: 10, right: 10, left: 10, bottom: 30 }}>
+        <AreaChart data={balanceData} margin={{ top: 10, right: 10, left: 10, bottom: 30 }}>
           <defs>
             <linearGradient id="colorBalance" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#6366f1" stopOpacity={0.8}/>
@@ -34,15 +34,19 @@ const BalanceTrendChart = React.memo(function BalanceTrendChart({ balanceData })
           <XAxis 
             dataKey="date" 
             stroke="#94a3b8" 
-            fontSize={12} 
-            tickMargin={10} 
+            fontSize={11} 
+            tickMargin={12} 
             tickFormatter={(val) => val.slice(5)} 
+            angle={-45}
+            textAnchor="end"
+            height={60}
           />
           <YAxis 
             stroke="#94a3b8" 
-            fontSize={12} 
+            fontSize={11} 
             tickFormatter={(value) => `$${value}`} 
-            width={60} 
+            width={50}
+            tickCount={5}
           />
           <RechartsTooltip 
             contentStyle={tooltipStyle}
@@ -54,10 +58,10 @@ const BalanceTrendChart = React.memo(function BalanceTrendChart({ balanceData })
             type="monotone" 
             dataKey="balance" 
             stroke="#6366f1" 
-            strokeWidth={3}
+            strokeWidth={2}
             fillOpacity={1} 
             fill="url(#colorBalance)" 
-            activeDot={{ r: 6, fill: '#818cf8', stroke: '#1e293b', strokeWidth: 2 }}
+            activeDot={{ r: 5, fill: '#818cf8', stroke: '#1e293b', strokeWidth: 2 }}
             animationDuration={1500}
             animationBegin={300}
           />

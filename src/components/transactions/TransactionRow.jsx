@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUpRight, ArrowDownRight, Edit2, Trash2, Repeat } from 'lucide-react';
+import { useGlobalContext } from '../../context/GlobalContext';
 
 const categoryColors = {
   'Salary':       'from-emerald-500 to-emerald-700', // Income
@@ -13,12 +14,25 @@ const categoryColors = {
   'Rent':         'from-red-500 to-red-700',       // Expense
 };
 
-const TransactionRow = React.memo(function TransactionRow({ t, isAdmin }) {
+const TransactionRow = React.memo(function TransactionRow({ t, isAdmin, onEditTransaction }) {
+  const { deleteTransaction } = useGlobalContext();
   const isIncome = t.type === 'Income';
   const isExpense = t.type === 'Expense';
   const isNeutral = !isIncome && !isExpense;
   
   const gradient = categoryColors[t.category] || 'from-surface-500 to-surface-700';
+
+  const handleEdit = () => {
+    if (onEditTransaction) {
+      onEditTransaction(t);
+    }
+  };
+
+  const handleDelete = () => {
+    if (window.confirm(`Are you sure you want to delete "${t.description}"?`)) {
+      deleteTransaction(t.id);
+    }
+  };
 
   const getAmountColor = () => {
     if (isIncome) return 'text-emerald-600 dark:text-emerald-400';
@@ -69,10 +83,18 @@ const TransactionRow = React.memo(function TransactionRow({ t, isAdmin }) {
       {isAdmin && (
         <td className="py-4 px-4 text-right">
           <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-2 group-hover:translate-x-0">
-            <button className="p-1.5 text-surface-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors cursor-pointer" title="Edit row">
+            <button 
+              onClick={handleEdit}
+              className="p-1.5 text-surface-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors cursor-pointer" 
+              title="Edit row"
+            >
               <Edit2 className="w-4 h-4" />
             </button>
-            <button className="p-1.5 text-surface-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer" title="Delete row">
+            <button 
+              onClick={handleDelete}
+              className="p-1.5 text-surface-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer" 
+              title="Delete row"
+            >
               <Trash2 className="w-4 h-4" />
             </button>
           </div>

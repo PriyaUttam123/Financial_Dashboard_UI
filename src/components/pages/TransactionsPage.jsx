@@ -3,6 +3,7 @@ import { useGlobalContext } from '../../context/GlobalContext';
 import { categories } from '../../data/mockData';
 import { Filter, Lock, Plus, Download, FileText, Table, ChevronDown } from 'lucide-react';
 import TransactionList from '../transactions/TransactionList';
+import TransactionModal from '../transactions/TransactionModal';
 import { exportToCSV, exportToPDF } from '../../utils/exportUtils';
 import Skeleton, { TableSkeleton } from '../common/Skeleton';
 import { motion } from 'framer-motion';
@@ -25,11 +26,14 @@ const itemVariants = {
 };
 
 export default function TransactionsPage() {
-  const { filteredTransactions, filters, setFilters, userRole } = useGlobalContext();
+  const { filteredTransactions, filters, setFilters, userRole, addTransaction, updateTransaction } = useGlobalContext();
   const isAdmin = userRole === 'Admin';
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Simulate initial loading
   useEffect(() => {
@@ -64,6 +68,45 @@ export default function TransactionsPage() {
   const handleExportPDF = () => {
     exportToPDF(filteredTransactions);
     setExportDropdownOpen(false);
+  };
+
+  const handleAddTransaction = () => {
+    setEditingTransaction(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditTransaction = (transaction) => {
+    setEditingTransaction(transaction);
+    setIsModalOpen(true);
+  };
+
+  const handleModalSubmit = async (transactionData) => {
+    setIsSubmitting(true);
+    
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      if (editingTransaction) {
+        updateTransaction(editingTransaction.id, transactionData);
+      } else {
+        addTransaction(transactionData);
+      }
+      
+      setIsModalOpen(false);
+      setEditingTransaction(null);
+    } catch (error) {
+      console.error('Error saving transaction:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    if (!isSubmitting) {
+      setIsModalOpen(false);
+      setEditingTransaction(null);
+    }
   };
 
   if (isLoading) {
@@ -132,7 +175,10 @@ export default function TransactionsPage() {
           </div>
 
           {isAdmin && (
-            <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-primary-500/25 transform hover:-translate-y-0.5">
+            <button 
+              onClick={handleAddTransaction}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-primary-500/25 transform hover:-translate-y-0.5"
+            >
               <Plus className="w-4 h-4" />
               <span className="hidden sm:inline">Add Transaction</span>
             </button>
@@ -173,8 +219,21 @@ export default function TransactionsPage() {
 
       {/* Table */}
       <motion.div variants={itemVariants}>
-        <TransactionList transactions={filteredTransactions} isAdmin={isAdmin} />
+        <TransactionList 
+          transactions={filteredTransactions} 
+          isAdmin={isAdmin} 
+          onEditTransaction={handleEditTransaction}
+        />
       </motion.div>
+
+      {/* Transaction Modal */}
+      <TransactionModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleModalSubmit}
+        transaction={editingTransaction}
+        isLoading={isSubmitting}
+      />
 
       {/* Table Footer */}
       <motion.div 

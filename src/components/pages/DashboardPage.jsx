@@ -1,8 +1,8 @@
 import React, { Suspense, useState, useEffect, useMemo } from 'react';
 import { useGlobalContext } from '../../context/GlobalContext';
-import { 
-  Wallet, 
-  TrendingUp, 
+import {
+  Wallet,
+  TrendingUp,
   TrendingDown,
   Activity,
 } from 'lucide-react';
@@ -25,9 +25,9 @@ const ChartSkeleton = () => (
     </div>
     <div className="flex-1 flex items-end gap-3 px-2">
       {[...Array(12)].map((_, i) => (
-        <Skeleton 
-          key={i} 
-          className="flex-1 rounded-t-lg" 
+        <Skeleton
+          key={i}
+          className="flex-1 rounded-t-lg"
           style={{ height: `${Math.random() * 60 + 20}%` }}
         />
       ))}
@@ -119,7 +119,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <motion.div 
+    <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -220,9 +220,9 @@ export default function DashboardPage() {
             View All
           </button>
         </div>
-        <TransactionList 
-          transactions={filteredTransactions.slice(0, 5)} 
-          isAdmin={userRole === 'Admin'} 
+        <TransactionList
+          transactions={filteredTransactions.slice(0, 5)}
+          isAdmin={userRole === 'Admin'}
         />
       </motion.div>
     </motion.div>

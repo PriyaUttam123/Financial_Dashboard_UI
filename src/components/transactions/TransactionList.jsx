@@ -1,7 +1,7 @@
 import React from 'react';
 import TransactionRow from './TransactionRow';
 
-const TransactionList = React.memo(function TransactionList({ transactions, isAdmin }) {
+const TransactionList = React.memo(function TransactionList({ transactions, isAdmin, onEditTransaction }) {
   return (
     <div className="glass-card overflow-hidden">
       <div className="overflow-x-auto">
@@ -20,7 +20,12 @@ const TransactionList = React.memo(function TransactionList({ transactions, isAd
           <tbody>
             {transactions.length > 0 ? (
               transactions.map((t) => (
-                <TransactionRow key={t.id} t={t} isAdmin={isAdmin} />
+                <TransactionRow 
+                  key={t.id} 
+                  t={t} 
+                  isAdmin={isAdmin} 
+                  onEditTransaction={onEditTransaction}
+                />
               ))
             ) : (
               <tr>

@@ -263,14 +263,14 @@ export default function InsightsPage() {
               const percentage = insights.totalExpenses > 0 ? (amount / insights.totalExpenses) * 100 : 0;
               return (
                 <div key={category} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-primary-500"></div>
-                    <span className="text-sm font-medium text-surface-700 dark:text-surface-300">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="w-2 h-2 rounded-full bg-primary-500 flex-shrink-0"></div>
+                    <span className="text-sm font-medium text-surface-700 dark:text-surface-300 truncate">
                       {category}
                     </span>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-32 bg-surface-200 dark:bg-surface-700 rounded-full h-2">
+                  <div className="flex items-center gap-4 flex-shrink-0">
+                    <div className="w-24 bg-surface-200 dark:bg-surface-700 rounded-full h-2">
                       <div 
                         className="bg-primary-500 h-2 rounded-full transition-all duration-500"
                         style={{ width: `${Math.min(percentage, 100)}%` }}
